@@ -9,7 +9,11 @@ SRCS		:= $(addprefix $(SRCDIR), $(SRCS))
 OBJS		:= $(addprefix $(OBJDIR), $(notdir $(SRCS:.c=.o)))
 DEPENDS		:= $(addprefix $(OBJDIR), $(notdir $(SRCS:.c=.d)))
 
-INCLUDE 	:= -I./includes/ -I./includes/defs/
+LIBDIR		:= ./libft
+LIBPATH		:= $(LIBDIR)/libft.a
+LFLAGS		:= -L${LIBDIR} -lft
+
+INCLUDE 	:= -I./includes/ -I./includes/defs/  -I$(LIBDIR)
 
 CC			:= gcc
 CFLAGS		:= -Wall -Wextra -Werror -MMD -MP
@@ -35,18 +39,27 @@ $(OBJDIR)%.o:	%.c
 .PHONY:		all
 all:		$(NAME)
 
-$(NAME):	$(OBJS)
-			$(CC) $(CFLAGS) $(DEBUG) $(OBJS) -o $@
+$(NAME):	$(LIBPATH) $(OBJS)
+			$(CC) $(CFLAGS) $(DEBUG) $(OBJS) $(LFLAGS) -o $@
 			@echo $(C_GREEN)"=== Make Done ==="$(C_DEFAULT)$(C_REST)
+
+$(LIBPATH):	init
+			$(MAKE) bonus -C $(LIBDIR)
+
+.PHONY:		init
+init:		## git clone --recursive https://this_repository
+			git submodule update --init
 
 .PHONY:		clean
 clean:
 			$(RM) $(OBJS)
 			$(RM) $(DEPENDS)
+			$(MAKE) clean -C $(LIBDIR)
 
 .PHONY:		fclean
 fclean:		clean
 			$(RM) $(NAME)
+			$(MAKE) fclean -C $(LIBDIR)
 
 .PHONY:		re
 re:			fclean $(NAME)

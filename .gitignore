@@ -1,5 +1,7 @@
 # Project file
 pipex
+infile
+outfile
 
 # Dev
 *test.c

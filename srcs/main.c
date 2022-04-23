@@ -8,17 +8,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "libft.h"
+#include "def_pipex.h"
 #include "def_error.h"
-
-#define ARG_NUM 5
-#define ARG_FILE1 1
-#define ARG_FILE2 4
-#define ARG_CMD1 2
-#define ARG_CMD2 3
-
-#define PIPE_R 0
-#define PIPE_W 1
-#define PIPE_NUM 2
 
 int	main(int ac, char **av)
 {
@@ -26,7 +18,7 @@ int	main(int ac, char **av)
 
 	if (ac != ARG_NUM)
 	{
-		write(STDERR_FILENO, ERR_INVAL, strlen(ERR_INVAL));
+		ft_putstr_fd(ERR_INVAL, STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
 
