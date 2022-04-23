@@ -1,0 +1,34 @@
+# Project file
+pipex
+
+# Dev
+*test.c
+*_old.c
+*.py
+
+# General
+.DS_Store
+
+# Editor
+.vscode
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+
+# Libraries
+*.dylib
+*.lib
+*.a
+
+# Executables
+*.exe
+*.out
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb

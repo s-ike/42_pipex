@@ -8,12 +8,13 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "def_error.h"
+
 #define ARG_NUM 5
 #define ARG_FILE1 1
 #define ARG_FILE2 4
 #define ARG_CMD1 2
 #define ARG_CMD2 3
-#define ERR_MSG_ARG "Invalid argument\n"
 
 #define PIPE_R 0
 #define PIPE_W 1
@@ -25,7 +26,7 @@ int	main(int ac, char **av)
 
 	if (ac != ARG_NUM)
 	{
-		write(STDERR_FILENO, ERR_MSG_ARG, strlen(ERR_MSG_ARG));
+		write(STDERR_FILENO, ERR_INVAL, strlen(ERR_INVAL));
 		exit(EXIT_FAILURE);
 	}
 
