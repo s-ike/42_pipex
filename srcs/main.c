@@ -1,14 +1,10 @@
 #include <unistd.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <stdio.h>
-
-#include <string.h>
 #include <stdlib.h>
 
-#include "libft.h"
+#include "utils.h"
 #include "def_pipex.h"
 #include "def_error.h"
 
@@ -18,7 +14,7 @@ int	main(int ac, char **av)
 
 	if (ac != ARG_NUM)
 	{
-		ft_putstr_fd(ERR_INVAL, STDERR_FILENO);
+		ft_puterror(ERR_INVAL);
 		exit(EXIT_FAILURE);
 	}
 
@@ -26,25 +22,24 @@ int	main(int ac, char **av)
 
 	if (pipe(fds) < 0)
 	{
-		perror("pipe");
+		ft_putperror("pipe");
 		exit(EXIT_FAILURE);
 	}
 
 	pid_t	pid = fork();
 	if (pid < 0)
 	{
-		perror("fork");
+		ft_putperror("fork");
 		exit(EXIT_FAILURE);
 	}
 	else if (pid == 0)
 	{
-		puts("child");
 		close(fds[PIPE_R]);
 
 		int	fd;
 		if ((fd = open(av[ARG_FILE1], O_RDONLY, 0666)) < 0)
 		{
-			perror("open");
+			ft_putperror(av[ARG_FILE1]);
 			return (EXIT_FAILURE);
 		}
 
@@ -57,12 +52,12 @@ int	main(int ac, char **av)
 		argv[0] = av[ARG_CMD1];
 		argv[1] = NULL;
 		execvp(av[ARG_CMD1], argv);
-		perror(av[ARG_CMD1]);
+		ft_putperror(av[ARG_CMD1]);
 		return (EXIT_FAILURE);
 	}
 	if (waitpid(pid, NULL, 0) < 0)
 	{
-		perror("waitpid");
+		ft_putperror("waitpid");
 		exit(EXIT_FAILURE);
 	}
 	{
@@ -74,7 +69,7 @@ int	main(int ac, char **av)
 		int	fd;
 		if ((fd = open(av[ARG_FILE2], O_WRONLY | O_CREAT | O_TRUNC, 0666)) < 0)
 		{
-			perror("open");
+			ft_putperror(av[ARG_FILE2]);
 			return (EXIT_FAILURE);
 		}
 
@@ -86,7 +81,7 @@ int	main(int ac, char **av)
 		argv[1] = NULL;
 
 		execvp(av[ARG_CMD2], argv);
-		perror("execvp(parent)");
+		ft_putperror(av[ARG_CMD2]);
 	}
 	return (EXIT_FAILURE);
 }

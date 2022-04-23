@@ -6,12 +6,14 @@
 /*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 22:08:03 by sikeda            #+#    #+#             */
-/*   Updated: 2022/04/23 22:08:05 by sikeda           ###   ########.fr       */
+/*   Updated: 2022/04/23 22:39:37 by sikeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEF_PIPEX_H
 # define DEF_PIPEX_H
+
+# define PRG_NAME "pipex"
 
 # define ARG_NUM 5
 # define ARG_FILE1 1

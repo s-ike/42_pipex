@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   def_error.h                                        :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/23 14:08:27 by sikeda            #+#    #+#             */
-/*   Updated: 2022/04/23 23:00:22 by sikeda           ###   ########.fr       */
+/*   Created: 2022/04/23 22:52:51 by sikeda            #+#    #+#             */
+/*   Updated: 2022/04/23 23:07:02 by sikeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEF_ERROR_H
-# define DEF_ERROR_H
+#ifndef UTILS_H
+# define UTILS_H
 
-# include "def_pipex.h"
+# include <unistd.h>
+# include <stdio.h>
+# include "libft.h"
+# include "def_error.h"
 # include "def_color.h"
 
-/*
-** program
-*/
-# define ERR_PREFIX COLOR_B_RED PRG_NAME ": "
-# define ERR_SUFFIX COLOR_RESET "\n"
-# define ERR_INVAL ERR_PREFIX "invalid argument" ERR_SUFFIX
-
-/*
-** system
-*/
-# define ERR_MALLOC "malloc error"
+void	ft_puterror(char *msg);
+void	ft_putperror(char *msg);
 
 #endif
