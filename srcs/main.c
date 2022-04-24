@@ -4,33 +4,31 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#include "utils.h"
+#include "ft_error.h"
 #include "def_pipex.h"
 #include "def_error.h"
 
-int	main(int ac, char **av)
+int
+	main(int ac, char **av)
 {
 	extern char	**environ;
 
 	if (ac != ARG_NUM)
 	{
-		ft_puterror(ERR_INVAL);
-		exit(EXIT_FAILURE);
+		ft_puterror_and_exit_failure(ft_puterror, ERR_INVAL);
 	}
 
 	int	fds[PIPE_NUM];
 
 	if (pipe(fds) < 0)
 	{
-		ft_putperror("pipe");
-		exit(EXIT_FAILURE);
+		ft_puterror_and_exit_failure(ft_putperror, "pipe");
 	}
 
 	pid_t	pid = fork();
 	if (pid < 0)
 	{
-		ft_putperror("fork");
-		exit(EXIT_FAILURE);
+		ft_puterror_and_exit_failure(ft_putperror, "fork");
 	}
 	else if (pid == 0)
 	{
@@ -39,8 +37,7 @@ int	main(int ac, char **av)
 		int	fd;
 		if ((fd = open(av[ARG_FILE1], O_RDONLY, 0666)) < 0)
 		{
-			ft_putperror(av[ARG_FILE1]);
-			return (EXIT_FAILURE);
+			ft_puterror_and_exit_failure(ft_putperror, av[ARG_FILE1]);
 		}
 
 		dup2(fds[PIPE_W], STDOUT_FILENO);
@@ -52,13 +49,11 @@ int	main(int ac, char **av)
 		argv[0] = av[ARG_CMD1];
 		argv[1] = NULL;
 		execvp(av[ARG_CMD1], argv);
-		ft_putperror(av[ARG_CMD1]);
-		return (EXIT_FAILURE);
+		ft_puterror_and_exit_failure(ft_putperror, av[ARG_CMD1]);
 	}
-	if (waitpid(pid, NULL, 0) < 0)
+	if (wait(NULL) != pid)
 	{
-		ft_putperror("waitpid");
-		exit(EXIT_FAILURE);
+		ft_puterror_and_exit_failure(ft_putperror, "wait");
 	}
 	{
 		close(fds[PIPE_W]);
@@ -69,8 +64,7 @@ int	main(int ac, char **av)
 		int	fd;
 		if ((fd = open(av[ARG_FILE2], O_WRONLY | O_CREAT | O_TRUNC, 0666)) < 0)
 		{
-			ft_putperror(av[ARG_FILE2]);
-			return (EXIT_FAILURE);
+			ft_puterror_and_exit_failure(ft_putperror, av[ARG_FILE2]);
 		}
 
 		dup2(fd, STDOUT_FILENO);
@@ -81,7 +75,7 @@ int	main(int ac, char **av)
 		argv[1] = NULL;
 
 		execvp(av[ARG_CMD2], argv);
-		ft_putperror(av[ARG_CMD2]);
+		ft_puterror_and_exit_failure(ft_putperror, av[ARG_CMD2]);
 	}
 	return (EXIT_FAILURE);
 }

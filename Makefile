@@ -5,7 +5,7 @@ OBJDIR		:= ./objs/
 VPATH		:= $(SRCDIR):$(SRCDIR)$(UTILDIR)
 
 SRCS		:= main.c \
-				utils.c
+				ft_error.c
 SRCS		:= $(addprefix $(SRCDIR), $(SRCS))
 OBJS		:= $(addprefix $(OBJDIR), $(notdir $(SRCS:.c=.o)))
 DEPENDS		:= $(addprefix $(OBJDIR), $(notdir $(SRCS:.c=.d)))
