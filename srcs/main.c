@@ -9,11 +9,22 @@
 #include "def_error.h"
 
 static void
+	execute(char *cmd, char **environ)
+{
+	char	*av[2];
+
+	(void)environ;
+	av[0] = cmd;
+	av[1] = NULL;
+	execvp(cmd, av);
+	ft_puterror_and_exit_failure(ft_putperror, cmd);
+}
+
+static void
 	child_process(char **argv, char **environ, int fds[PIPE_NUM])
 {
 	int	fd;
 
-	(void)environ;
 	close(fds[PIPE_R]);
 	if ((fd = open(argv[ARG_FILE1], O_RDONLY, 0666)) < 0)
 	{
@@ -25,11 +36,7 @@ static void
 	close(fds[PIPE_W]);
 	close(fd);
 
-	char	*av[2];
-	av[0] = argv[ARG_CMD1];
-	av[1] = NULL;
-	execvp(argv[ARG_CMD1], av);
-	ft_puterror_and_exit_failure(ft_putperror, argv[ARG_CMD1]);
+	execute(argv[ARG_CMD1], environ);
 }
 
 static void
@@ -50,12 +57,7 @@ static void
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 
-	char	*av[2];
-	av[0] = argv[ARG_CMD2];
-	av[1] = NULL;
-
-	execvp(argv[ARG_CMD2], av);
-	ft_puterror_and_exit_failure(ft_putperror, argv[ARG_CMD2]);
+	execute(argv[ARG_CMD2], environ);
 }
 
 static void
