@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/27 11:32:59 by sikeda            #+#    #+#             */
+/*   Updated: 2022/04/27 11:34:52 by sikeda           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -63,27 +75,30 @@ static void
 static void
 	main_process(char **argv, char **environ)
 {
-	int	fds[PIPE_NUM];
+	int		fds[PIPE_NUM];
 	pid_t	pid;
+	int		status;
 
 	if (pipe(fds) < 0)
-	{
 		ft_puterror_and_exit_failure(ft_putperror, "pipe");
-	}
 	pid = fork();
 	if (pid < 0)
-	{
 		ft_puterror_and_exit_failure(ft_putperror, "fork");
-	}
 	else if (pid == 0)
-	{
 		child_process(argv, environ, fds);
-	}
-	if (wait(NULL) != pid)
+	if (waitpid(pid, &status, 0) < 0)
+		ft_puterror_and_exit_failure(ft_putperror, "waitpid");
+	if (WIFEXITED(status))
 	{
-		ft_puterror_and_exit_failure(ft_putperror, "wait");
+		if (WEXITSTATUS(status))
+			exit(EXIT_FAILURE);
+		else
+			parent_process(argv, environ, fds);
 	}
-	parent_process(argv, environ, fds);
+	else if (WIFSIGNALED(status))
+		exit(WTERMSIG(status));
+	else
+		exit(EXIT_FAILURE);
 }
 
 int
