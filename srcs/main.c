@@ -6,7 +6,7 @@
 /*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 11:32:59 by sikeda            #+#    #+#             */
-/*   Updated: 2022/04/27 11:34:52 by sikeda           ###   ########.fr       */
+/*   Updated: 2022/04/29 17:12:44 by sikeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,9 @@
 #include <stdlib.h>
 
 #include "ft_error.h"
+#include "ft_execute.h"
 #include "def_pipex.h"
 #include "def_error.h"
-
-static void
-	execute(char *cmd, char **environ)
-{
-	char	*av[2];
-
-	(void)environ;
-	av[0] = cmd;
-	av[1] = NULL;
-	execvp(cmd, av);
-	ft_puterror_and_exit_failure(ft_putperror, cmd);
-}
 
 static void
 	child_process(char **argv, char **environ, int fds[PIPE_NUM])
@@ -48,13 +37,12 @@ static void
 	close(fds[PIPE_W]);
 	close(fd);
 
-	execute(argv[ARG_CMD1], environ);
+	ft_execute(argv[ARG_CMD1], environ);
 }
 
 static void
 	parent_process(char **argv, char **environ, int fds[PIPE_NUM])
 {
-	(void)environ;
 	close(fds[PIPE_W]);
 
 	dup2(fds[PIPE_R], STDIN_FILENO);
@@ -69,7 +57,7 @@ static void
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 
-	execute(argv[ARG_CMD2], environ);
+	ft_execute(argv[ARG_CMD2], environ);
 }
 
 static void
