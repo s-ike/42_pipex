@@ -1,28 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_execute.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/29 19:02:03 by sikeda            #+#    #+#             */
+/*   Updated: 2022/04/29 19:02:04 by sikeda           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_execute.h"
 
 static char
 	*add_current(char *str)
 {
 	char	*ptr;
-	char	*cpy;
 	char	*new_path;
-	size_t	i;
 
 	ptr = ft_strnstr(str, "::", ft_strlen(str));
-	cpy = str;
-	new_path = (char *)malloc(ft_strlen(str) + 2 * sizeof(char));
+	new_path = (char *)ft_calloc(ft_strlen(str) + 2, sizeof(char));
 	if (!new_path)
 		return (NULL);
-	i = 0;
-	while (cpy != ptr)
-		new_path[i++] = *cpy++;
-	new_path[i++] = ':';
-	new_path[i++] = '.';
-	cpy++;
-	new_path[i++] = *cpy++;
-	while (*cpy)
-		new_path[i++] = *cpy++;
-	new_path[i] = '\0';
+	ft_memcpy(new_path, str, ptr - str);
+	ft_strcat(new_path, ":.:");
+	ft_strcat(new_path, ptr + 2);
 	return (new_path);
 }
 

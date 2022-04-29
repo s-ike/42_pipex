@@ -4,6 +4,7 @@ infile
 outfile
 
 # Dev
+test
 *test.c
 *_old.c
 *.py
