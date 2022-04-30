@@ -6,7 +6,7 @@
 /*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 11:32:59 by sikeda            #+#    #+#             */
-/*   Updated: 2022/04/29 17:12:44 by sikeda           ###   ########.fr       */
+/*   Updated: 2022/04/30 22:27:52 by sikeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,21 @@
 #include "ft_execute.h"
 #include "def_pipex.h"
 #include "def_error.h"
+
+void
+	destructor(void)__attribute__((destructor));
+
+void
+	destructor(void)
+{
+	int		status;
+	char	buf[50];
+
+	snprintf(buf, 50, "leaks %d &> leaksout", getpid());
+	status = system(buf);
+	if (status)
+		system("cat leaksout >&2");
+}
 
 static void
 	child_process(char **argv, char **environ, int fds[PIPE_NUM])

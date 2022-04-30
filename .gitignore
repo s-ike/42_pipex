@@ -4,6 +4,7 @@ infile
 outfile
 
 # Dev
+leaksout
 test
 *test.c
 *_old.c

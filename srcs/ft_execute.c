@@ -6,7 +6,7 @@
 /*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/29 19:02:03 by sikeda            #+#    #+#             */
-/*   Updated: 2022/04/29 19:02:04 by sikeda           ###   ########.fr       */
+/*   Updated: 2022/04/30 22:27:33 by sikeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,21 +75,26 @@ static char
 
 	cmd_path = ft_strjoin("/", cmd);
 	if (!cmd_path)
-		return NULL;
+		return (NULL);
 	path_str_from_env = get_path_str(environ);
+	if (!path_str_from_env)
+	{
+		ft_free(&cmd_path);
+		return (NULL);
+	}
 	paths = ft_split(path_str_from_env, ':');
+	ft_free(&path_str_from_env);
 	i = 0;
 	while (paths[i])
 	{
 		path = ft_strjoin(paths[i++], cmd_path);
-		if (!path)
+		if (!path || access(path, F_OK) == 0)
 			break ;
-		if (access(path, F_OK) == 0)
-			break ;
+		ft_free(&path);
 	}
 	ft_free(&cmd_path);
 	ft_free_split(&paths);
-	if (access(path, F_OK) != 0)
+	if (path && access(path, F_OK) != 0)
 		ft_free(&path);
 	return (path);
 }
@@ -97,17 +102,21 @@ static char
 void
 	ft_execute(char *cmd_str, char **environ)
 {
-	char	*av[2];
 	char	**cmd;
 	char	*cmd_path;
 
 	cmd = ft_split(cmd_str, ' ');
+	cmd_path = NULL;
 	if (cmd)
 		cmd_path = get_path(cmd[0], environ);
-	else
+	if (!cmd_path)
+	{
+		if (cmd)
+			ft_free_split(&cmd);
 		ft_puterror_and_exit_failure(ft_putperror, "execute");
-	av[0] = cmd_str;
-	av[1] = NULL;
-	execve(cmd_path, av, environ);
+	}
+	execve(cmd_path, cmd, environ);
+	ft_free(&cmd_path);
+	ft_free_split(&cmd);
 	ft_puterror_and_exit_failure(ft_putperror, cmd_str);
 }
