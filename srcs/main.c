@@ -6,7 +6,7 @@
 /*   By: sikeda <sikeda@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 11:32:59 by sikeda            #+#    #+#             */
-/*   Updated: 2022/04/30 22:27:52 by sikeda           ###   ########.fr       */
+/*   Updated: 2022/04/30 23:25:09 by sikeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include "ft_execute.h"
 #include "def_pipex.h"
 #include "def_error.h"
+
+#ifdef LEAKS
 
 void
 	destructor(void)__attribute__((destructor));
@@ -35,6 +37,7 @@ void
 	if (status)
 		system("cat leaksout >&2");
 }
+#endif
 
 static void
 	child_process(char **argv, char **environ, int fds[PIPE_NUM])
@@ -42,36 +45,29 @@ static void
 	int	fd;
 
 	close(fds[PIPE_R]);
-	if ((fd = open(argv[ARG_FILE1], O_RDONLY, 0666)) < 0)
-	{
+	fd = open(argv[ARG_FILE1], O_RDONLY, 0666);
+	if (fd < 0)
 		ft_puterror_and_exit_failure(ft_putperror, argv[ARG_FILE1]);
-	}
-
 	dup2(fds[PIPE_W], STDOUT_FILENO);
 	dup2(fd, STDIN_FILENO);
 	close(fds[PIPE_W]);
 	close(fd);
-
 	ft_execute(argv[ARG_CMD1], environ);
 }
 
 static void
 	parent_process(char **argv, char **environ, int fds[PIPE_NUM])
 {
-	close(fds[PIPE_W]);
+	int	fd;
 
+	close(fds[PIPE_W]);
 	dup2(fds[PIPE_R], STDIN_FILENO);
 	close(fds[PIPE_R]);
-
-	int	fd;
-	if ((fd = open(argv[ARG_FILE2], O_WRONLY | O_CREAT | O_TRUNC, 0666)) < 0)
-	{
+	fd = open(argv[ARG_FILE2], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (fd < 0)
 		ft_puterror_and_exit_failure(ft_putperror, argv[ARG_FILE2]);
-	}
-
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
-
 	ft_execute(argv[ARG_CMD2], environ);
 }
 
@@ -110,9 +106,7 @@ int
 	extern char	**environ;
 
 	if (argc != ARG_NUM)
-	{
 		ft_puterror_and_exit_failure(ft_puterror, ERR_INVAL);
-	}
 	main_process(argv, environ);
 	return (EXIT_FAILURE);
 }
