@@ -62,6 +62,7 @@ clean:
 
 .PHONY:		fclean
 fclean:		clean
+			rm -rf $(OBJDIR)
 			$(RM) $(NAME)
 			$(MAKE) fclean -C $(LIBDIR)
 
